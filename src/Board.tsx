@@ -1,29 +1,29 @@
-import Square from "./Square"
+import Row from "./Row";
 
 type BoardProps = { xIsNext: boolean, squares: (string | undefined)[], onPlay: (nextSquares: (string | undefined)[]) => void }
-type Winner = { winner: string | undefined, squares: (number | undefined)[] }
+export type Winner = { winner: string | undefined, squares: (number | undefined)[] }
+
+function calculateWinner(squares: (string | undefined)[]): Winner | undefined {
+  const lines: number[][] = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (const element of lines) {
+    const [a, b, c]: number[] = element;
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return {winner: squares[a], squares: element};
+    }
+  }
+  return undefined;
+}
 
 export default function Board({xIsNext, squares, onPlay}: Readonly<BoardProps>) {
-  function calculateWinner(squares: (string | undefined)[]): Winner | undefined {
-    const lines: number[][] = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6]
-    ];
-    for (const element of lines) {
-      const [a, b, c]: number[] = element;
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return {winner: squares[a], squares: element};
-      }
-    }
-    return undefined;
-  }
-
   function handleClick(i: number) {
     if (squares[i] || calculateWinner(squares))
       return
@@ -44,21 +44,10 @@ export default function Board({xIsNext, squares, onPlay}: Readonly<BoardProps>) 
   else
     status = `Next player: ${xIsNext ? 'X' : 'O'}`
 
-  function row(rowIndex: number) {
-    return Array(3).fill(undefined).map((_, colIndex) => {
-      const squareIndex = rowIndex * 3 + colIndex
-      if (winner && winner.squares.includes(squareIndex)) {
-        return <Square value={squares[squareIndex]} onSquareClick={() => handleClick(squareIndex)} winningSquare={true}/>
-      }
-      return <Square value={squares[squareIndex]} onSquareClick={() => handleClick(squareIndex)} winningSquare={false}/>
-    })
-  }
-
   const board = Array(3).fill(undefined).map((_, rowIndex) => {
-    return <div className="board-row">
-      {(row(rowIndex))}
+    return <div className="board-row" key={rowIndex}>
+      {Row({rowIndex, winner, squares, handleClick,})}
     </div>
-
   })
 
   return (
