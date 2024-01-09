@@ -46,46 +46,31 @@ ul {
   padding-inline-start: 20px;
 }
 
-* {
-  box-sizing: border-box;
-}
+$square-size: 150px;
 
-body {
-  font-family: sans-serif;
-  margin: 20px;
+@mixin square($color: White) {
+  background: $color;
+  border: 1px solid #999;
+  float: left;
+  font-size: $square-size;
+  font-weight: bold;
+  line-height: 34px;
+  height: $square-size;
+  margin-right: -1px;
+  margin-top: -1px;
+  width: $square-size;
   padding: 0;
+  text-align: center;
+  border-radius: 5px;
 }
 
 .square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 34px;
+  @include square
 }
 
 .winningSquare {
-  background: #ff9696;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 34px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 34px;
+  @include square(LightGreen)
 }
-
 
 .board-row:after {
   clear: both;
@@ -95,8 +80,11 @@ body {
 
 .status {
   margin-bottom: 10px;
+  text-align: center;
 }
+
 .game {
+  font-size: 25px;
   display: flex;
   flex-direction: row;
 }
